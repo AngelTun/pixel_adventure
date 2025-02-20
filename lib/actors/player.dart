@@ -73,24 +73,43 @@ class Player extends SpriteAnimationGroupComponent with HasGameRef<PixelAdventur
     );
   }
   
-  void _updatePlayerMovement(double dt) {
-    double dirX = 0.0;
-    switch (playerDirection) {
-      case PlayerDirection.left:
-        current = PlayerState.running;
-        dirX -= moveSpeed;
-        break;
-      case PlayerDirection.right:
+void _updatePlayerMovement(double dt) {
+  // Inicializa la variable dirX con un valor de 0.0, indicando que el jugador no se moverá horizontalmente por defecto.
+  double dirX = 0.0;
+  
+  // Revisa la dirección del jugador almacenada en playerDirection y realiza la acción correspondiente.
+  switch (playerDirection) {
+    
+    // Si la dirección es hacia la izquierda
+    case PlayerDirection.left:
+      // Cambia el estado del jugador a "corriendo"
       current = PlayerState.running;
+      // Indica que el jugador se moverá a la izquierda con la velocidad de movimiento
+      dirX -= moveSpeed;
+      break;
+    
+    // Si la dirección es hacia la derecha
+    case PlayerDirection.right:
+      // Cambia el estado del jugador a "corriendo"
+      current = PlayerState.running;
+      // Indica que el jugador se moverá a la derecha con la velocidad de movimiento (moveSpeed)
       dirX += moveSpeed;
-        break;
-      case PlayerDirection.none:
+      break;
+    
+    // Si no hay movimiento el playerDirection es none
+    case PlayerDirection.none:
+      // Cambia el estado del jugador a "inactivo"
       current = PlayerState.idle;
-        break;
-      default:
-    }
+      break;
+    default:
+  }
 
-    velocity = Vector2(dirX, 0.0);
-    position += velocity * dt;
+  // Actualiza la velocidad del jugador en el eje X con el valor de dirX 
+  velocity = Vector2(dirX, 0.0);
+  
+  // Actualiza la posición del jugador multiplicando la velocidad por el tiempo transcurrido para asegurar un movimiento suave
+  position += velocity * dt;
+
+
   }
 }
