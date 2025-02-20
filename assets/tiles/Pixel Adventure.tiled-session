@@ -5,6 +5,7 @@
     },
     "activeFile": "Level-01.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "Level-01.tmx": {
@@ -19,6 +20,9 @@
             }
         },
         "Level-02.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
             "scale": 1.622421875,
             "selectedLayer": 1,
             "viewCenter": {
@@ -39,11 +43,13 @@
     "map.width": 40,
     "openFiles": [
         "Pixel Adventure.tsx",
-        "Level-01.tmx"
+        "Level-01.tmx",
+        "Level-02.tmx"
     ],
     "project": "Pixel Adventure.tiled-project",
     "recentFiles": [
         "Pixel Adventure.tsx",
+        "Level-02.tmx",
         "Level-01.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",

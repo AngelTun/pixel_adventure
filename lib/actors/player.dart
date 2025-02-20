@@ -3,51 +3,94 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
-enum PlayerState{ idle, running }
+// Enum para definir los estados del jugador
+enum PlayerState { idle, running }
 
-class Player extends SpriteAnimationGroupComponent
-with HasGameRef<PixelAdventure>{
+//Enum para definir los movimientos del jugador
+enum PlayerDirection {left, right, none}
 
-
+class Player extends SpriteAnimationGroupComponent with HasGameRef<PixelAdventure> {
+  
+  // Nombre del personaje (puede haber diferentes skins o modelos)
   String character;
+
+  // Constructor de la clase Player
   Player({position, required this.character}) : super(position: position);
 
+  // Variables para almacenar las animaciones del personaje
   late final SpriteAnimation idleAnimation;
   late final SpriteAnimation runningAnimation;
+
+  // Tiempo entre cada cuadro de la animación
   final double stepTime = 0.05;
+  
+  //Para establecer la velocidad de movimiento del jugador
+  PlayerDirection playerDirection = PlayerDirection.none;
+  double moveSpeed = 100;
+  //Para controlar las direcciones x, y
+  Vector2 velocity = Vector2.zero();
 
   @override
   FutureOr<void> onLoad() {
-    // TODO: implement onLoad
+    // Carga todas las animaciones al inicializar el personaje
     _loadAllAnimations();
     return super.onLoad();
   }
 
-  void _loadAllAnimations() {
-    idleAnimation = _spriteAnimation('Idle', 11);
+  @override
+  //Para actualizar el movimiento del jugador
+  void update(double dt) {
+    _updatePlayerMovement(dt);
+    super.update(dt);
+  }
 
+  // Método para cargar todas las animaciones del personaje
+  void _loadAllAnimations() {
+    // Se crean las animaciones para cada estado del personaje
+    idleAnimation = _spriteAnimation('Idle', 11);
     runningAnimation = _spriteAnimation('Run', 12);
 
-
-
-
-    //Lista de todas las animaciones
+    // Asigna las animaciones al mapa de animaciones del personaje
     animations = {
-      PlayerState.idle:idleAnimation,
+      PlayerState.idle: idleAnimation,
       PlayerState.running: runningAnimation,
-      };
-    //Para establecer la animación actual
+    };
+
+    // Establece la animación inicial en 'idle'
     current = PlayerState.idle;
   }
 
+  // Método que carga una animación desde los archivos de imágenes en caché
   SpriteAnimation _spriteAnimation(String state, int amount) {
     return SpriteAnimation.fromFrameData(
+      // Obtiene la imagen desde la caché del juego según el estado y el personaje
       game.images.fromCache('Main Characters/$character/$state (32x32).png'),
       SpriteAnimationData.sequenced(
-      amount: amount,
-      stepTime: stepTime,
-      textureSize: Vector2.all(32),
+        amount: amount, // Número de cuadros de la animación
+        stepTime: stepTime, // Tiempo entre cada cuadro
+        textureSize: Vector2.all(32), // Tamaño de cada cuadro en píxeles (32x32)
       ),
     );
+  }
+  
+  void _updatePlayerMovement(double dt) {
+    double dirX = 0.0;
+    switch (playerDirection) {
+      case PlayerDirection.left:
+        current = PlayerState.running;
+        dirX -= moveSpeed;
+        break;
+      case PlayerDirection.right:
+      current = PlayerState.running;
+      dirX += moveSpeed;
+        break;
+      case PlayerDirection.none:
+      current = PlayerState.idle;
+        break;
+      default:
+    }
+
+    velocity = Vector2(dirX, 0.0);
+    position += velocity * dt;
   }
 }
