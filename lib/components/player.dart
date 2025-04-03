@@ -1,13 +1,15 @@
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
+import 'package:pixel_adventure/components/player_hitbox.dart';
 import 'package:pixel_adventure/components/utils.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
 // Enum para definir los estados del jugador
-enum PlayerState { idle, running }
+enum PlayerState { idle, running, jumping, falling }
 
 class Player extends SpriteAnimationGroupComponent
   with HasGameRef<PixelAdventure>, KeyboardHandler{
@@ -16,20 +18,22 @@ class Player extends SpriteAnimationGroupComponent
   String character;
 
   // Constructor de la clase Player
-  Player({position,
+  Player({
+   position,
    this.character = 'Ninja Frog',
    }) : super(position: position);
 
+  // Tiempo entre cada cuadro de la animación
+  final double stepTime = 0.05;
   // Variables para almacenar las animaciones del personaje
   late final SpriteAnimation idleAnimation;
   late final SpriteAnimation runningAnimation;
-
-  // Tiempo entre cada cuadro de la animación
-  final double stepTime = 0.05;
+  late final SpriteAnimation jumpingAnimation;
+  late final SpriteAnimation fallingAnimation;
   
 
   final double _gravity = 9.8;
-  final double _jumpForce = 460;
+  final double _jumpForce = 280;
   final double _terminalVelocity = 300;
   double horizontalMovement = 0;
 
@@ -40,12 +44,22 @@ class Player extends SpriteAnimationGroupComponent
   bool isOnGround = false;
   bool hasJumped = false;
   List <CollisionBlock> collisionBlocks = [];
+  PlayerHitbox hitbox = PlayerHitbox(
+    offsetX: 10,
+    offsetY: 4,
+    width: 14,
+    height: 28,
+  );
 
   @override
   FutureOr<void> onLoad() {
     // Carga todas las animaciones al inicializar el personaje
     _loadAllAnimations();
-    debugMode = true;
+    //debugMode = true;
+    add(RectangleHitbox(
+      position: Vector2(hitbox.offsetX, hitbox.offsetY),
+      size: Vector2(hitbox.width, hitbox.height),
+    ));
     return super.onLoad();
   }
 
@@ -84,11 +98,15 @@ class Player extends SpriteAnimationGroupComponent
     // Se crean las animaciones para cada estado del personaje
     idleAnimation = _spriteAnimation('Idle', 11);
     runningAnimation = _spriteAnimation('Run', 12);
+    jumpingAnimation = _spriteAnimation('Jump', 1);
+    fallingAnimation = _spriteAnimation('Fall', 1);
 
     // Asigna las animaciones al mapa de animaciones del personaje
     animations = {
       PlayerState.idle: idleAnimation,
       PlayerState.running: runningAnimation,
+      PlayerState.jumping: jumpingAnimation,
+      PlayerState.falling: fallingAnimation,
     };
 
     // Establece la animación inicial en 'idle'
@@ -120,12 +138,20 @@ class Player extends SpriteAnimationGroupComponent
     //Para comprobar si se esta moviendo, y poner la animación
     if (velocity.x > 0 || velocity.x < 0) playerState = PlayerState.running;
 
+    //Para comprobar si esta configurada para caer
+    if (velocity.y > 0) playerState = PlayerState.falling;
+
+    //Para comprobar si salta
+    if(velocity.y < 0) playerState = PlayerState.jumping;
+
     current = playerState;
   }
   
 void _updatePlayerMovement(double dt) {
 
   if (hasJumped && isOnGround) _playerJump(dt);
+
+  //if(velocity.y > _gravity) isOnGround = false;
  
   // Actualiza la velocidad del jugador en el eje X con el valor de dirX
   velocity.x = horizontalMovement * moveSpeed;
@@ -150,12 +176,12 @@ void _updatePlayerMovement(double dt) {
         if (checkCollision(this, block)){
           if (velocity.x > 0) {
             velocity.x = 0;
-            position.x = block.x - width;
+            position.x = block.x - hitbox.offsetX - hitbox.width;
             break;
           }
           if (velocity.x < 0) {
             velocity.x = 0;
-            position.x = block.x + block.width + width;
+            position.x = block.x + block.width + hitbox.width + hitbox.offsetX;
             break;
           }
         }
@@ -175,7 +201,7 @@ void _updatePlayerMovement(double dt) {
         if (checkCollision(this, block)){
           if(velocity.y > 0) {
             velocity.y = 0;
-            position.y = block.y - width;
+            position.y = block.y - hitbox.height - hitbox.offsetY;
             isOnGround = true;
             break;
           }
@@ -184,20 +210,16 @@ void _updatePlayerMovement(double dt) {
         if (checkCollision(this, block)) {
           if(velocity.y > 0) {
             velocity.y = 0;
-            position.y = block.y - width;
+            position.y = block.y - hitbox.height - hitbox.offsetY;
             isOnGround = true;
             break;
           }
           if (velocity.y < 0) {
             velocity.y = 0;
-            position.y = block.y + block.height;
+            position.y = block.y + block.height - hitbox.offsetY;
           }
         }
       }
     }
   }
-  
-
-  
-
 }
