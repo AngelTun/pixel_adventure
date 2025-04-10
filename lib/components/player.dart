@@ -36,7 +36,7 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation appearingAnimation;
 
   final double _gravity = 9.8;
-  final double _jumpForce = 200;
+  final double _jumpForce = 210;
   final double _terminalVelocity = 300;
   double horizontalMovement = 0;
 
