@@ -8,7 +8,7 @@ import 'package:pixel_adventure/components/level.dart';
 import 'package:pixel_adventure/components/player.dart';
 
 // Clase principal del juego, extiende de FlameGame
-class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks{
+class PixelAdventure extends FlameGame with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection{
   // Define el color de fondo del juego
   @override
   Color backgroundColor() => const Color(0xFF211F30); // Color oscuro
