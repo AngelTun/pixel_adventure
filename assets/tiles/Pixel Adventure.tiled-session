@@ -8,6 +8,25 @@
         "."
     ],
     "fileStates": {
+        "C:/Users/angel/Downloads/pixel adventure/pixel_adventure-master/assets/tiles/Level-01.tmx": {
+            "scale": 0.6115625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 319.67296882984164,
+                "y": 184.7726111394992
+            }
+        },
+        "C:/Users/angel/Downloads/pixel adventure/pixel_adventure-master/assets/tiles/Level-02.tmx": {
+            "scale": 0.6115625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 319.67296882984164,
+                "y": 184.7726111394992
+            }
+        },
+        "C:/Users/angel/Downloads/pixel adventure/pixel_adventure-master/assets/tiles/Pixel Adventure.tsx": {
+            "scaleInDock": 1
+        },
         "Level-01.tmx": {
             "expandedObjectLayers": [
                 2
@@ -15,8 +34,8 @@
             "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 304.75,
-                "y": 161.25
+                "x": 388.25,
+                "y": 357.5
             }
         },
         "Level-02.tmx": {
@@ -51,7 +70,9 @@
     "recentFiles": [
         "Pixel Adventure.tsx",
         "Level-02.tmx",
-        "Level-01.tmx"
+        "Level-01.tmx",
+        "C:/Users/angel/Downloads/pixel adventure/pixel_adventure-master/assets/tiles/Level-01.tmx",
+        "C:/Users/angel/Downloads/pixel adventure/pixel_adventure-master/assets/tiles/Level-02.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
